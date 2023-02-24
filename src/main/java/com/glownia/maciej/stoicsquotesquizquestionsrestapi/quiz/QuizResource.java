@@ -1,12 +1,12 @@
 package com.glownia.maciej.stoicsquotesquizquestionsrestapi.quiz;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -60,5 +60,17 @@ public class QuizResource {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         return quote;
+    }
+
+    @RequestMapping(value="/quizzes/{quizId}/quotes", method = RequestMethod.POST)
+    public ResponseEntity<Object> addNewQuote(@PathVariable String quizId, @RequestBody Quote quote) {
+
+        String quoteId = quizService.addNewQuote(quizId, quote);
+
+        // Good practice is send the location of the created resource as part of response.
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{quoteId}").buildAndExpand(quoteId).toUri();
+        // ResponseEntity handle retrieving status response equal to 201 - CREATED, instead of 200 is giving by default.
+        return ResponseEntity.created(location).build();
     }
 }

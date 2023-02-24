@@ -2,6 +2,8 @@ package com.glownia.maciej.stoicsquotesquizquestionsrestapi.quiz;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,5 +77,22 @@ public class QuizService {
         if (optionalQuote.isEmpty()) return null;
 
         return optionalQuote.get();
+    }
+
+    public String addNewQuote(String quizId, Quote quote) {
+
+        List<Quote> quotes = retrieveAllQuotes(quizId);
+
+        quote.setId(generateRandomId());
+
+        quotes.add(quote);
+
+        return quote.getId();
+    }
+
+    private String generateRandomId() {
+        SecureRandom secureRandom = new SecureRandom();
+        String randomId = new BigInteger(32, secureRandom).toString();
+        return randomId;
     }
 }
