@@ -55,4 +55,14 @@ public class QuizService {
         return quiz.getQuotes();
 
     }
+
+    public Quote retrieveSpecificQuote(String quizId, String quoteId) {
+        List<Quote> quotes = retrieveAllQuotes(quizId);
+        if (quotes == null) return null;
+        Optional<Quote> optionalQuote =
+                quotes.stream().filter
+                        (quote -> quote.getId().equalsIgnoreCase(quoteId)).findFirst();
+        if (optionalQuote.isEmpty()) return null;
+        return optionalQuote.get();
+    }
 }

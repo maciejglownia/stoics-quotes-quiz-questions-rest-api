@@ -3,6 +3,7 @@ package com.glownia.maciej.stoicsquotesquizquestionsrestapi.quiz;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -46,5 +47,15 @@ public class QuizResource {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         return quotes;
+    }
+
+    @RequestMapping("/quizzes/{quizId}/quotes/{quoteId}")
+    public Quote retrieveSpecificQuote(@PathVariable String quizId, @PathVariable String quoteId) {
+        Quote quote = quizService.retrieveSpecificQuote(quizId, quoteId);
+
+        if(quote == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return quote;
     }
 }
