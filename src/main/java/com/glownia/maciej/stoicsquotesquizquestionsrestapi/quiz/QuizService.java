@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Contains static List of quizzes.
@@ -38,5 +40,12 @@ public class QuizService {
 
     public List<Quiz> retrieveAllQuizzes() {
         return quizList;
+    }
+
+    public Quiz retrieveQuizQuizById(String quizId) {
+        Predicate<? super Quiz> predicate = quiz -> quiz.getId().equalsIgnoreCase(quizId);
+        Optional<Quiz> optionalQuiz = quizList.stream().filter(predicate).findFirst();
+        if(optionalQuiz.isEmpty()) return null;
+        return optionalQuiz.get();
     }
 }
