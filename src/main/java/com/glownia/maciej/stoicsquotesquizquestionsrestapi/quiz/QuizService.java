@@ -35,4 +35,8 @@ public class QuizService {
 
         quizList.add(quiz);
     }
+
+    public List<Quiz> retrieveAllQuizzes() {
+        return quizList;
+    }
 }
