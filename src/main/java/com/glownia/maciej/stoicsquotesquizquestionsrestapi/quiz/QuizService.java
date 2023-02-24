@@ -43,26 +43,37 @@ public class QuizService {
     }
 
     public Quiz retrieveQuizQuizById(String quizId) {
+
         Predicate<? super Quiz> predicate = quiz -> quiz.getId().equalsIgnoreCase(quizId);
+
         Optional<Quiz> optionalQuiz = quizList.stream().filter(predicate).findFirst();
-        if(optionalQuiz.isEmpty()) return null;
+
+        if (optionalQuiz.isEmpty()) return null;
+
         return optionalQuiz.get();
     }
 
     public List<Quote> retrieveAllQuotes(String quizId) {
-        Quiz quiz = retrieveQuizQuizById(quizId);
-        if (quiz == null) return null;
-        return quiz.getQuotes();
 
+        Quiz quiz = retrieveQuizQuizById(quizId);
+
+        if (quiz == null) return null;
+
+        return quiz.getQuotes();
     }
 
     public Quote retrieveSpecificQuote(String quizId, String quoteId) {
+
         List<Quote> quotes = retrieveAllQuotes(quizId);
+
         if (quotes == null) return null;
+
         Optional<Quote> optionalQuote =
                 quotes.stream().filter
                         (quote -> quote.getId().equalsIgnoreCase(quoteId)).findFirst();
+
         if (optionalQuote.isEmpty()) return null;
+
         return optionalQuote.get();
     }
 }
