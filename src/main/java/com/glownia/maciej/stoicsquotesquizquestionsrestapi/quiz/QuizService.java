@@ -48,4 +48,11 @@ public class QuizService {
         if(optionalQuiz.isEmpty()) return null;
         return optionalQuiz.get();
     }
+
+    public List<Quote> retrieveAllQuotes(String quizId) {
+        Quiz quiz = retrieveQuizQuizById(quizId);
+        if (quiz == null) return null;
+        return quiz.getQuotes();
+
+    }
 }

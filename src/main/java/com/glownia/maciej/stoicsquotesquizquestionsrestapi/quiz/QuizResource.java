@@ -32,9 +32,19 @@ public class QuizResource {
         Quiz quiz = quizService.retrieveQuizQuizById(quizId);
 
         // if quiz is null status is still 200 but no content appear, that's why need to protect from it
-//        if(quiz == null)
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if(quiz == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         return quiz;
+    }
+
+    @RequestMapping("/quizzes/{quizId}/quotes")
+    public List<Quote> retrieveAllQuotes(@PathVariable String quizId) {
+        List<Quote> quotes = quizService.retrieveAllQuotes(quizId);
+
+        if(quotes == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return quotes;
     }
 }
