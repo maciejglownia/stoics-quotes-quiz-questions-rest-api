@@ -73,4 +73,11 @@ public class QuizResource {
         // ResponseEntity handle retrieving status response equal to 201 - CREATED, instead of 200 is giving by default.
         return ResponseEntity.created(location).build();
     }
+
+    @RequestMapping(value="/quizzes/{quizId}/quotes/{quoteId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteSpecificQuote(@PathVariable String quizId, @PathVariable String quoteId) {
+
+        quizService.deleteSpecificQuote(quizId, quoteId);
+        return ResponseEntity.noContent().build();
+    }
 }

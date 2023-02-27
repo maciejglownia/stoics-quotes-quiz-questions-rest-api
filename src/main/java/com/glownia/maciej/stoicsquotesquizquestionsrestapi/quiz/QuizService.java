@@ -95,4 +95,18 @@ public class QuizService {
         String randomId = new BigInteger(32, secureRandom).toString();
         return randomId;
     }
+
+    public String deleteSpecificQuote(String quizId, String quoteId) {
+
+        List<Quote> quotes = retrieveAllQuotes(quizId);
+
+        if (quotes == null) return null;
+
+        Predicate<Quote> quotePredicate = quote -> quote.getId().equalsIgnoreCase(quoteId);
+        boolean removed = quotes.removeIf(quotePredicate);//  remove if specific predicate matches)
+
+        if(!removed) return null;
+
+        return quoteId;
+    }
 }
