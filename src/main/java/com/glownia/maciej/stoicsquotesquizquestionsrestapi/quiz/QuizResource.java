@@ -62,7 +62,7 @@ public class QuizResource {
         return quote;
     }
 
-    @RequestMapping(value="/quizzes/{quizId}/quotes", method = RequestMethod.POST)
+    @RequestMapping(value = "/quizzes/{quizId}/quotes", method = RequestMethod.POST)
     public ResponseEntity<Object> addNewQuote(@PathVariable String quizId, @RequestBody Quote quote) {
 
         String quoteId = quizService.addNewQuote(quizId, quote);
@@ -74,10 +74,20 @@ public class QuizResource {
         return ResponseEntity.created(location).build();
     }
 
-    @RequestMapping(value="/quizzes/{quizId}/quotes/{quoteId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/quizzes/{quizId}/quotes/{quoteId}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteSpecificQuote(@PathVariable String quizId, @PathVariable String quoteId) {
 
         quizService.deleteSpecificQuote(quizId, quoteId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/quizzes/{quizId}/quotes/{quoteId}", method = RequestMethod.PUT)
+    public ResponseEntity<Object> updateSpecificQuote(
+            @PathVariable String quizId, @PathVariable String quoteId, @RequestBody Quote quote) {
+
+        quizService.updateSpecificQuote(quizId, quoteId, quote  );
+
         return ResponseEntity.noContent().build();
     }
 }

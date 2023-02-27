@@ -105,8 +105,17 @@ public class QuizService {
         Predicate<Quote> quotePredicate = quote -> quote.getId().equalsIgnoreCase(quoteId);
         boolean removed = quotes.removeIf(quotePredicate);//  remove if specific predicate matches)
 
-        if(!removed) return null;
+        if (!removed) return null;
 
         return quoteId;
+    }
+
+    public void updateSpecificQuote(String quizId, String quoteId, Quote quote) {
+
+        List<Quote> quotes = retrieveAllQuotes(quizId);
+
+        quotes.removeIf(q -> q.getId().equalsIgnoreCase(quoteId));
+
+        quotes.add(quote);
     }
 }
