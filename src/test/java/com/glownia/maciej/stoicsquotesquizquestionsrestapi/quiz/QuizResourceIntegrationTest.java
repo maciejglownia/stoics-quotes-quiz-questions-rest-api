@@ -18,6 +18,7 @@ public class QuizResourceIntegrationTest {
     private static String SPECIFIC_QUOTE_URL = "/quizzes/Quiz1/quotes/Quote1";
     private static String GENERIC_QUOTES_URL = "/quizzes/Quiz1/quotes";
     private static String SPECIFIC_QUIZ_URL = "/quizzes/Quiz1";
+    private static String GENERIC_QUIZZES_URL = "/quizzes";
 
     @Autowired
     private TestRestTemplate template; // the app talk directly to http://localhost:RANDOM_PORT/quizzes/Quiz1/quotes/Quote1
@@ -98,6 +99,25 @@ public class QuizResourceIntegrationTest {
                         {
                           "id": "Quiz1"
                         }
+                """;
+
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
+        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false);
+    }
+
+    @Test
+    void retrieveAllQuizzesBasicScenario() throws JSONException {
+
+        ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUIZZES_URL, String.class);
+
+        String expectedResponse =
+                """
+                        [
+                            {
+                            "id": "Quiz1"
+                            }
+                        ]
                 """;
 
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
