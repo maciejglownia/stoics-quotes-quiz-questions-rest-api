@@ -17,6 +17,7 @@ public class QuizResourceIntegrationTest {
 
     private static String SPECIFIC_QUOTE_URL = "/quizzes/Quiz1/quotes/Quote1";
     private static String GENERIC_QUOTES_URL = "/quizzes/Quiz1/quotes";
+    private static String SPECIFIC_QUIZ_URL = "/quizzes/Quiz1";
 
     @Autowired
     private TestRestTemplate template; // the app talk directly to http://localhost:RANDOM_PORT/quizzes/Quiz1/quotes/Quote1
@@ -43,12 +44,12 @@ public class QuizResourceIntegrationTest {
 
         String expectedResponse =
                 """
-                    {
-                        "id":"Quote1",
-                        "quote":"Quote of Marcus Aurelius",
-                        "correctAnswer":"Marcus Aurelius"
-                    }
-                """;
+                            {
+                                "id":"Quote1",
+                                "quote":"Quote of Marcus Aurelius",
+                                "correctAnswer":"Marcus Aurelius"
+                            }
+                        """;
 
         // NOTE: This order of assertions below is correct
         // check status of response
@@ -56,7 +57,7 @@ public class QuizResourceIntegrationTest {
         // check Content-Type:"application/json"
         assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
         // check actual response
-        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(),false); // check [JsonAssertTest] for more
+        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false); // check [JsonAssertTest] for more
     }
 
     @Test
@@ -65,7 +66,7 @@ public class QuizResourceIntegrationTest {
         ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUOTES_URL, String.class);
 
         String expectedResponse =
-                        """
+                """
                                 [
                                   {
                                     "id": "Quote1"
@@ -84,6 +85,23 @@ public class QuizResourceIntegrationTest {
 
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
         assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
-        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(),false);
+        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false);
+    }
+
+    @Test
+    void retrieveSpecificQuizBasicScenario() throws JSONException {
+
+        ResponseEntity<String> responseEntity = template.getForEntity(SPECIFIC_QUIZ_URL, String.class);
+
+        String expectedResponse =
+                """
+                        {
+                          "id": "Quiz1"
+                        }
+                """;
+
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
+        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false);
     }
 }
