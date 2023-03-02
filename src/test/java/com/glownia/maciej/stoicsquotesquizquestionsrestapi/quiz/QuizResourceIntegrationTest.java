@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class QuizResourceIntegrationTest {
 
     private static String SPECIFIC_QUOTE_URL = "/quizzes/Quiz1/quotes/Quote1";
+    private static String GENERIC_QUOTES_URL = "/quizzes/Quiz1/quotes";
 
     @Autowired
     private TestRestTemplate template; // the app talk directly to http://localhost:RANDOM_PORT/quizzes/Quiz1/quotes/Quote1
@@ -37,13 +38,16 @@ public class QuizResourceIntegrationTest {
 
     @Test
     void retrieveSpecificQuoteBasicScenario() throws JSONException {
+
         ResponseEntity<String> responseEntity = template.getForEntity(SPECIFIC_QUOTE_URL, String.class);
 
         String expectedResponse =
                 """
-                {"id":"Quote1",
-                "quote":"Quote of Marcus Aurelius",
-                "correctAnswer":"Marcus Aurelius"}
+                    {
+                        "id":"Quote1",
+                        "quote":"Quote of Marcus Aurelius",
+                        "correctAnswer":"Marcus Aurelius"
+                    }
                 """;
 
         // NOTE: This order of assertions below is correct
@@ -53,5 +57,33 @@ public class QuizResourceIntegrationTest {
         assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
         // check actual response
         JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(),false); // check [JsonAssertTest] for more
+    }
+
+    @Test
+    void retrieveAllQuotesBasicScenario() throws JSONException {
+
+        ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUOTES_URL, String.class);
+
+        String expectedResponse =
+                        """
+                                [
+                                  {
+                                    "id": "Quote1"
+                                  },
+                                  {
+                                    "id": "Quote2"
+                                  },
+                                  {
+                                    "id": "Quote3"
+                                  },
+                                  {
+                                    "id": "Quote4"
+                                  }
+                                ]
+                        """;
+
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
+        JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(),false);
     }
 }
