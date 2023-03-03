@@ -3,11 +3,12 @@
 ### Goal
 
 1. Create REST API application which has Quizzes available to the client.
-2. Learn: Java, Spring Boot 3
+2. Learn: Java, Spring Boot 3, Unit Tests, Integration Tests, Mock, Spring Security.
 
 ### Disclaimer
 
 Application does not contain real quotes. It shows only mechanism. And it is part of my learning process.
+Check also others branches:
 
 ### URLs
 
