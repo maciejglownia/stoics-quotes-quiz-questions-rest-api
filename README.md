@@ -8,7 +8,6 @@
 ### Disclaimer
 
 Application does not contain real quotes. It shows only mechanism. And it is part of my learning process.
-Check also others branches:
 
 ### URLs
 
