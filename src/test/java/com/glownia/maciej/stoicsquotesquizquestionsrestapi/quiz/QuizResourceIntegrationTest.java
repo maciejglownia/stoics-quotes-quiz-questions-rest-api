@@ -12,6 +12,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,7 +47,13 @@ public class QuizResourceIntegrationTest {
     @Test
     void retrieveSpecificQuoteBasicScenario() throws JSONException {
 
-        ResponseEntity<String> responseEntity = template.getForEntity(SPECIFIC_QUOTE_URL, String.class);
+        // Added after added Spring Security
+        HttpHeaders headers = createHttpContentTypeAndAuthorizationHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
+        ResponseEntity<String> responseEntity =
+                template.exchange(SPECIFIC_QUOTE_URL, HttpMethod.GET, httpEntity, String.class);
+
+        //ResponseEntity<String> responseEntity = template.getForEntity(SPECIFIC_QUOTE_URL, String.class);
 
         String expectedResponse =
                 """
@@ -68,7 +76,13 @@ public class QuizResourceIntegrationTest {
     @Test
     void retrieveAllQuotesBasicScenario() throws JSONException {
 
-        ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUOTES_URL, String.class);
+        // Added after added Spring Security
+        HttpHeaders headers = createHttpContentTypeAndAuthorizationHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
+        ResponseEntity<String> responseEntity =
+                template.exchange(GENERIC_QUOTES_URL, HttpMethod.GET, httpEntity, String.class);
+
+        //ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUOTES_URL, String.class);
 
         String expectedResponse =
                 """
@@ -96,7 +110,11 @@ public class QuizResourceIntegrationTest {
     @Test
     void retrieveSpecificQuizBasicScenario() throws JSONException {
 
-        ResponseEntity<String> responseEntity = template.getForEntity(SPECIFIC_QUIZ_URL, String.class);
+        // Added after added Spring Security
+        HttpHeaders headers = createHttpContentTypeAndAuthorizationHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
+        ResponseEntity<String> responseEntity =
+                template.exchange(SPECIFIC_QUIZ_URL, HttpMethod.GET, httpEntity, String.class);
 
         String expectedResponse =
                 """
@@ -113,7 +131,13 @@ public class QuizResourceIntegrationTest {
     @Test
     void retrieveAllQuizzesBasicScenario() throws JSONException {
 
-        ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUIZZES_URL, String.class);
+        // Added after added Spring Security
+        HttpHeaders headers = createHttpContentTypeAndAuthorizationHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
+        ResponseEntity<String> responseEntity =
+                template.exchange(GENERIC_QUIZZES_URL, HttpMethod.GET, httpEntity, String.class);
+
+        //ResponseEntity<String> responseEntity = template.getForEntity(GENERIC_QUIZZES_URL, String.class);
 
         String expectedResponse =
                 """
@@ -146,11 +170,8 @@ public class QuizResourceIntegrationTest {
                     }
                 """;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
+        HttpHeaders headers = createHttpContentTypeAndAuthorizationHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(requestBody, headers);
-
         ResponseEntity<String> responseEntity =
                 template.exchange(GENERIC_QUOTES_URL, HttpMethod.POST, httpEntity, String.class);
 
@@ -161,8 +182,29 @@ public class QuizResourceIntegrationTest {
         String locationHeader = responseEntity.getHeaders().get("Location").get(0);
         assertTrue(locationHeader.contains("/quizzes/Quiz1/quotes"));
 
+        // Added after added Spring Security to make all test pass
+        ResponseEntity<String> responseEntityDelete =
+                template.exchange(locationHeader, HttpMethod.DELETE, httpEntity, String.class);
+        assertTrue(responseEntityDelete.getStatusCode().is2xxSuccessful());
+
         // Always make sure that testing method does not have any side effects
         // Immediately delete quiz questions which were created - now all tests will pass
-        template.delete(locationHeader);
+        // template.delete(locationHeader);
+    }
+
+    private HttpHeaders createHttpContentTypeAndAuthorizationHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        headers.add("Authorization", "Basic " + performBasicAuthEncoding("admin", "password"));
+        return headers;
+    }
+
+    // In bigger project this can be put to center place where all utilities are
+    String performBasicAuthEncoding(String user, String password) {
+        String combined = user + ":" + password;
+        // Base64 Encoding => Bytes
+        byte[] encodeBytes = Base64.getEncoder().encode(combined.getBytes());
+        // Bytes => String
+        return new String(encodeBytes);
     }
 }

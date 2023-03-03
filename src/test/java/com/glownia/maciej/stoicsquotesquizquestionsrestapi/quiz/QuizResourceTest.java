@@ -3,6 +3,7 @@ package com.glownia.maciej.stoicsquotesquizquestionsrestapi.quiz;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // Launch up web context with specific resource -> QuizResource
 @WebMvcTest(controllers = QuizResource.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class QuizResourceTest {
 
     @MockBean
